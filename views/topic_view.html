@@ -1,0 +1,51 @@
+{{template "header"}}
+<title>{{.Topic.Title}} - 我的 beego 博客</title>
+</head>
+
+<body>
+    <div class="navbar navbar-default">
+        <div class="container">
+            {{template "navbar" .}}
+        </div>
+    </div>
+
+    <div class="container">
+        {{$labels := .Labels}}
+        {{with .Topic}}
+        <h1>{{.Title}}</h1>
+        <h5>
+            {{range $labels}}
+            <a href="/?label={{.}}">{{.}}</a>
+            {{end}}
+        </h5>
+        {{.Content}}
+        <h5>附件：<a href="/attachment/{{.Attachment}}">{{.Attachment}}</a></h5>
+        {{end}}
+    </div>
+    <div class="container">
+        {{$tid:=.Topic.ID}}
+        {{$isLogin:=.IsLogin}}
+        {{range .Replies}}
+        <h3>{{.Name}} <small>{{.Created}} {{if $isLogin}} <a href="/reply/delete?tid={{$tid}}&rid={{.ID}}">删除</a> {{end}} </small> </h3>
+        {{.Content}}
+        {{end}}
+        <h3>本文回复</h3>
+        <form action="/reply/add" method="post">
+            <input type="hidden" name="tid" value="{{.Topic.ID}}">
+            <div class="form-group">
+                <label>昵称</label>
+                <input type="text" name="nickname" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>内容</label>
+                <textarea name="content" id="" cols="30" rows="10" class="form-control"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">提交回复</button>
+        </form>
+    </div>
+
+    <script type="text/javascript" src="http://cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+</body>
+
+</html>
